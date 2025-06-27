@@ -6,20 +6,21 @@ import Profile from "@/components/profile";
 
 export default function Home() {
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [disable, setDisabled] = useState(true);
+  const [user, setUser] = useState(null); // user object
+  const [isDisabled, setIsDisabled] = useState(true); // dashboard button state
 
-  // ✅ Check sessionStorage for user
+  // ✅ Load user from sessionStorage on first render
   useEffect(() => {
-    const storedUser = sessionStorage.getItem("user");
+    const storedUser = JSON.parse(sessionStorage.getItem("user"));
     if (storedUser) {
       setUser(storedUser);
-      setDisabled(false);
+      setIsDisabled(false);
     }
   }, []);
+
   return (
-    <main className="relative flex flex-col items-center justify-center min-h-screen  text-white px-6">
-      {/* ✅ Top-right Login/Signup or Avatar */}
+    <main className="relative flex flex-col items-center justify-center min-h-screen text-white px-6">
+      {/* ✅ Top-right login/signup or avatar */}
       {!user ? (
         <div className="absolute top-6 right-6 flex gap-4">
           <button
@@ -37,11 +38,11 @@ export default function Home() {
         </div>
       ) : (
         <div className="absolute top-6 right-6 flex items-center gap-2">
-           <Profile/>
+          <Profile />
         </div>
       )}
 
-      {/* ✅ Main Heading */}
+      {/* ✅ Heading */}
       <div className="text-center max-w-2xl">
         <h1 className="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-sm">
           Merchant Hub
@@ -52,27 +53,29 @@ export default function Home() {
         </p>
       </div>
 
-      {/* ✅ Action Buttons */}
+      {/* ✅ Action buttons */}
       <div className="flex flex-col md:flex-row gap-6">
+        {/* Dashboard button */}
         <div className="flex flex-col items-center">
           <button
             onClick={() => router.push("/dashboard")}
-            disabled={disable}
+            disabled={isDisabled}
             className={`px-8 py-3 border border-white rounded-md font-semibold transition duration-200 w-60 ${
-              disable
+              isDisabled
                 ? "bg-white/20 opacity-50 cursor-not-allowed"
                 : "bg-white/20 hover:bg-white hover:text-[#0D4C5C]"
             }`}
           >
             Go to Dashboard
           </button>
-          {disable && (
+          {isDisabled && (
             <p className="mt-2 text-xs text-center text-white/90 w-60">
               Dashboard access is enabled after login or sign up.
             </p>
           )}
         </div>
 
+        {/* Franchise request button */}
         <div className="flex flex-col items-center">
           <button
             onClick={() => router.push("/franchise-request")}
